@@ -15,9 +15,23 @@ es un cambio de alcance, no un detalle.
 
 ## Forma
 
-Un solo `index.html` sin dependencias, sin build y sin JavaScript. Los
-colores son tokens en `:root` con su variante clara bajo
-`prefers-color-scheme`. Se publica como sitio estático.
+Un solo `index.html` sin dependencias ni build. Los colores son tokens en
+`:root` con su variante clara bajo `prefers-color-scheme`. Se publica como
+sitio estático.
+
+El único JavaScript es el del formulario de contacto, y solo para
+interceptar el envío.
+
+## El formulario no envía, y lo dice
+
+No hay backend ni dirección de correo publicada. Al enviar, el formulario
+le avisa a la persona que el canal todavía no está activo y que no se
+guardó nada — porque es cierto: no se almacena ni se transmite nada.
+
+Esa honestidad no es un placeholder que se borra: un formulario que recoge
+datos y los tira sin avisar quema el contacto de alguien que quiso
+escribir. Cuando haya dominio y buzón, se conecta el envío y el aviso se
+reemplaza por una confirmación real.
 
 ## Cifras
 

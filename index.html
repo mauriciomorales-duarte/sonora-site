@@ -141,6 +141,23 @@ td b{color:var(--accent)}
   color:var(--muted); font-size:15.5px}
 .risk span{color:var(--warm); font-weight:700}
 
+/* form */
+form{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:clamp(22px,3.5vw,32px)}
+.field{margin-bottom:16px}
+.field label{display:block; font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:7px}
+.field input,.field select,.field textarea{
+  width:100%; padding:12px 14px; border-radius:11px; border:1px solid var(--line);
+  background:var(--bg-2); color:var(--text); font-family:inherit; font-size:15.5px;
+  transition:border-color .16s}
+.field textarea{resize:vertical; min-height:96px}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none; border-color:var(--accent)}
+.aviso{margin:18px 0 0; padding:14px 16px; border-radius:11px; font-size:14.5px;
+  color:var(--text); background:color-mix(in srgb,var(--accent) 12%, transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 38%, transparent)}
+
 footer{border-top:1px solid var(--line); padding:56px 0 72px; color:var(--dim); font-size:14px}
 footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
 </style>
@@ -265,13 +282,59 @@ footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wr
   </div>
 </div></section>
 
-<section id="contacto"><div class="wrap" style="text-align:center">
-  <h2 class="serif" style="max-width:24ch;margin:0 auto">Si esto te suena, hablemos.</h2>
-  <p class="sub" style="margin:22px auto 0">Buscamos artistas dispuestos a probarlo primero y personas que quieran construirlo.</p>
-  <div class="cta" style="justify-content:center">
-    <a class="btn btn-1" href="mailto:mauriciomorales.duarte@proton.me">Escribir</a>
+<section id="contacto"><div class="wrap">
+  <div class="split" style="align-items:center">
+    <div>
+      <div class="tag">Contacto</div>
+      <h2 class="serif">Si esto te suena, hablemos.</h2>
+      <p class="sub">Buscamos artistas dispuestos a probarlo primero y personas que quieran construirlo. Cuéntanos quién eres y qué te interesa.</p>
+    </div>
+
+    <form id="form" novalidate>
+      <div class="field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="correo">Correo</label>
+        <input id="correo" name="correo" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="rol">Te acercas como</label>
+        <select id="rol" name="rol">
+          <option>Artista</option>
+          <option>Oyente</option>
+          <option>Sello o manager</option>
+          <option>Quiero construirlo</option>
+          <option>Otra cosa</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+      </div>
+      <button class="btn btn-1" type="submit" style="width:100%;cursor:pointer;font-family:inherit">Enviar</button>
+      <p id="aviso" role="status" hidden></p>
+    </form>
   </div>
 </div></section>
+
+<script>
+(function () {
+  var form = document.getElementById("form");
+  var aviso = document.getElementById("aviso");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    aviso.hidden = false;
+    aviso.className = "aviso";
+    aviso.textContent =
+      "El canal de contacto todavía no está activo, así que tu mensaje no se envió " +
+      "y no guardamos nada de lo que escribiste. Estamos terminando de montarlo. " +
+      "Vuelve en unos días y este formulario ya va a llegar a alguien.";
+    aviso.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+})();
+</script>
 
 <footer><div class="wrap">
   <div><span class="brand"><span class="dot"></span> Sonora</span></div>

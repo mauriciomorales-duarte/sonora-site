@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sonora · demo</title>
+<meta name="description" content="La plataforma donde escuchar música le paga al artista, reproducción por reproducción.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08070b; --bg-2:#0f0d15; --surface:#141220; --line:#241f33;
+  --text:#f4f1fa; --muted:#a49bb8; --dim:#6f6684;
+  --accent:#c4f24a; --accent-2:#8b5cf6; --warm:#ff8a5b;
+  --ok:#5fd68a; --warn:#ff8a5b;
+  --radius:18px; --max:1120px;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#fbfaf7; --bg-2:#f3f1ec; --surface:#ffffff; --line:#e4e0d8;
+    --text:#14121a; --muted:#5d5670; --dim:#89829a;
+    --accent:#5f8f00; --accent-2:#6d3ff0; --warm:#d1502a;
+    --ok:#18794e; --warn:#b4451a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08070b; --bg-2:#0f0d15; --surface:#141220; --line:#241f33;
+  --text:#f4f1fa; --muted:#a49bb8; --dim:#6f6684;
+  --accent:#c4f24a; --accent-2:#8b5cf6; --warm:#ff8a5b;
+  --ok:#5fd68a; --warn:#ff8a5b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--max); margin:0 auto; padding:0 16px}
+h1,h2,h3{line-height:1.12; letter-spacing:-.02em; margin:0}
+.serif{font-family:"Instrument Serif",Georgia,serif; font-weight:400; letter-spacing:-.01em}
+em.serif{font-style:italic}
+a{color:inherit}
+
+/* nav */
+nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(14px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom:1px solid var(--line)}
+nav .wrap{display:flex; align-items:center; justify-content:space-between; height:62px; gap:16px}
+.brand{display:flex; align-items:center; gap:10px; font-weight:600; letter-spacing:-.02em}
+.dot{width:11px; height:11px; border-radius:50%; background:var(--accent);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%, transparent)}
+.navlinks{display:flex; gap:26px; font-size:14.5px; color:var(--muted)}
+.navlinks a{text-decoration:none}
+.navlinks a:hover{color:var(--text)}
+@media(max-width:820px){.navlinks{display:none}}
+
+/* hero */
+header{position:relative; overflow:hidden; padding:92px 0 76px}
+header::before{content:""; position:absolute; inset:-30% -10% auto -10%; height:620px;
+  background:radial-gradient(60% 60% at 30% 0%, color-mix(in srgb,var(--accent-2) 26%, transparent), transparent 70%),
+             radial-gradient(48% 48% at 78% 12%, color-mix(in srgb,var(--accent) 18%, transparent), transparent 70%);
+  filter:blur(18px); pointer-events:none}
+header .wrap{position:relative}
+.eyebrow{display:inline-flex; align-items:center; gap:9px; font-size:13px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--muted); border:1px solid var(--line);
+  padding:7px 14px; border-radius:100px; background:var(--surface)}
+h1{font-size:clamp(2.6rem,7vw,5.1rem); margin:26px 0 0; max-width:16ch}
+h1 span{color:var(--accent)}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem); color:var(--muted); max-width:56ch; margin:24px 0 0}
+.cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:34px}
+.btn{display:inline-block; padding:13px 24px; border-radius:100px; font-weight:600;
+  font-size:15px; text-decoration:none; border:1px solid transparent; transition:.18s}
+.btn-1{background:var(--accent); color:#0a0a0a}
+.btn-1:hover{transform:translateY(-2px)}
+.btn-2{border-color:var(--line); color:var(--text); background:var(--surface)}
+.btn-2:hover{border-color:var(--muted)}
+
+/* stat strip */
+.strip{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-top:60px}
+.strip div{background:var(--bg-2); padding:26px 22px}
+.strip b{display:block; font-family:"Instrument Serif",serif; font-size:2.3rem; line-height:1;
+  color:var(--accent); font-weight:400}
+.strip small{display:block; color:var(--muted); font-size:14px; margin-top:9px}
+@media(max-width:720px){.strip{grid-template-columns:1fr}}
+
+/* sections */
+section{padding:84px 0; border-top:1px solid var(--line)}
+.tag{font-size:13px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent);
+  font-weight:600; margin-bottom:16px}
+h2{font-size:clamp(1.9rem,4.2vw,3rem); max-width:20ch}
+.sub{color:var(--muted); max-width:62ch; margin-top:18px; font-size:1.05rem}
+
+.split{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr; gap:36px}}
+
+.cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:48px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:28px; transition:.18s}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 45%, var(--line)); transform:translateY(-3px)}
+.card h3{font-size:1.18rem; margin-bottom:10px}
+.card p{color:var(--muted); font-size:15.5px; margin:0}
+.num{font-family:"Instrument Serif",serif; font-size:1.6rem; color:var(--accent-2);
+  display:block; margin-bottom:14px}
+
+/* flow */
+.flow{counter-reset:s; margin-top:52px; display:grid; gap:2px;
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--line)}
+.step{background:var(--bg-2); padding:30px; display:grid;
+  grid-template-columns:64px 1fr; gap:22px; align-items:start}
+.step i{font-style:normal; font-family:"Instrument Serif",serif; font-size:2.1rem;
+  color:var(--accent); line-height:1}
+.step h3{font-size:1.15rem; margin-bottom:8px}
+.step p{margin:0; color:var(--muted); font-size:15.5px}
+@media(max-width:620px){.step{grid-template-columns:1fr; gap:10px; padding:24px}}
+
+/* compare */
+table{width:100%; border-collapse:collapse; margin-top:44px; font-size:15.5px}
+th,td{text-align:left; padding:16px 14px; border-bottom:1px solid var(--line)}
+th{color:var(--dim); font-weight:600; font-size:13px; letter-spacing:.06em; text-transform:uppercase}
+td:first-child{color:var(--muted)}
+td b{color:var(--accent)}
+@media(max-width:620px){th,td{padding:12px 8px; font-size:14px}}
+
+/* revenue */
+.rev{display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:48px}
+@media(max-width:820px){.rev{grid-template-columns:1fr}}
+.rev div{border-left:2px solid var(--accent); padding:4px 0 4px 22px}
+.rev h3{font-size:1.1rem; margin-bottom:8px}
+.rev p{margin:0; color:var(--muted); font-size:15.5px}
+
+/* quote */
+.quote{border:1px solid var(--line); background:linear-gradient(140deg,var(--bg-2),var(--surface));
+  border-radius:var(--radius); padding:clamp(30px,5vw,58px); margin-top:20px}
+.quote p{font-family:"Instrument Serif",serif; font-size:clamp(1.4rem,3.3vw,2.1rem);
+  line-height:1.35; margin:0; letter-spacing:-.01em}
+
+/* risks */
+.risks{margin-top:44px; display:grid; gap:14px}
+.risk{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:baseline;
+  color:var(--muted); font-size:15.5px}
+.risk span{color:var(--warm); font-weight:700}
+
+/* form */
+form{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:clamp(22px,3.5vw,32px)}
+.field{margin-bottom:16px}
+.field label{display:block; font-size:13px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:7px}
+.field input,.field select,.field textarea{
+  width:100%; padding:12px 14px; border-radius:11px; border:1px solid var(--line);
+  background:var(--bg-2); color:var(--text); font-family:inherit; font-size:15.5px;
+  transition:border-color .16s}
+.field textarea{resize:vertical; min-height:96px}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none; border-color:var(--accent)}
+.aviso{margin:18px 0 0; padding:14px 16px; border-radius:11px; font-size:14.5px;
+  display:flex; gap:11px; align-items:flex-start;
+  color:var(--text); background:color-mix(in srgb,var(--accent) 12%, transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 38%, transparent)}
+.aviso b{display:block; margin-bottom:3px}
+.aviso .ico{flex:none; width:20px; height:20px; margin-top:1px}
+.aviso.ok{background:color-mix(in srgb,var(--ok) 13%, transparent);
+  border-color:color-mix(in srgb,var(--ok) 42%, transparent)}
+.aviso.ok .ico{color:var(--ok)}
+.aviso.err{background:color-mix(in srgb,var(--warn) 13%, transparent);
+  border-color:color-mix(in srgb,var(--warn) 42%, transparent)}
+.aviso.err .ico{color:var(--warn)}
+form[data-enviando] button[type=submit]{opacity:.6; pointer-events:none}
+.field input[aria-invalid=true],.field textarea[aria-invalid=true]{border-color:var(--warn)}
+
+footer{border-top:1px solid var(--line); padding:56px 0 72px; color:var(--dim); font-size:14px}
+footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="brand"><span class="dot"></span> Sonora</div>
+  <div class="navlinks">
+    <a href="#problema">El problema</a>
+    <a href="#como">Cómo funciona</a>
+    <a href="#negocio">Modelo</a>
+    <a href="#riesgos">Riesgos</a>
+  </div>
+  <a class="btn btn-1" href="#contacto" style="padding:9px 18px;font-size:14px">Hablemos</a>
+</div></nav>
+
+<header><div class="wrap">
+  <span class="eyebrow"><span class="dot" style="width:7px;height:7px;box-shadow:none"></span> Streaming musical · Pagos directos</span>
+  <h1 class="serif">Escuchar una canción debería <span>pagarle</span> a quien la hizo.</h1>
+  <p class="lede">Hoy no lo hace. Sonora convierte cada reproducción en un pago real al artista, en el momento en que ocurre, sin trimestres de espera ni intermediarios que se queden con el resto.</p>
+  <div class="cta">
+    <a class="btn btn-1" href="#como">Ver cómo funciona</a>
+    <a class="btn btn-2" href="#negocio">El modelo de negocio</a>
+  </div>
+
+  <div class="strip">
+    <div><b>~0,003 USD</b><small>Lo que recibe un artista por reproducción en las plataformas actuales, según lo que ellos mismos publican.</small></div>
+    <div><b>1.000.000</b><small>Reproducciones que necesita para ganar el equivalente a un sueldo mensual promedio.</small></div>
+    <div><b>1 a 3 meses</b><small>Lo que tarda ese dinero en llegarle, después de pasar por sello y distribuidora.</small></div>
+  </div>
+</div></header>
+
+<section id="problema"><div class="wrap">
+  <div class="split">
+    <div>
+      <div class="tag">El problema</div>
+      <h2 class="serif">La plata existe. Llega tarde, llega poco y llega diluida.</h2>
+    </div>
+    <div>
+      <p class="sub" style="margin-top:0">El streaming no es pobre: mueve miles de millones al año. El problema es el recorrido. Lo que paga un oyente entra a un pozo común, se reparte por porcentaje de reproducciones totales, pasa por la distribuidora, por el sello, y meses después llega al artista convertido en una fracción.</p>
+      <p class="sub">En el camino se pierden dos cosas más importantes que el dinero: <strong style="color:var(--text)">la relación y la información</strong>. El artista no sabe quién lo escucha. El oyente no tiene forma de apoyar a alguien en particular. Los dos están a un clic de distancia y no se pueden ver.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><span class="num">01</span><h3>El pozo común</h3><p>Tu suscripción no va a quien escuchas. Va a un fondo que se reparte según reproducciones globales, así que financias a los artistas más grandes aunque nunca los hayas oído.</p></div>
+    <div class="card"><span class="num">02</span><h3>La demora</h3><p>Entre que alguien te escucha y recibes el dinero pasan meses. Para un músico independiente, ese desfase es la diferencia entre grabar y no grabar.</p></div>
+    <div class="card"><span class="num">03</span><h3>La opacidad</h3><p>El artista recibe un total y confía. No puede auditar de dónde salió, ni verificar el cálculo, ni reclamar sobre algo que no puede ver.</p></div>
+  </div>
+</div></section>
+
+<section id="como"><div class="wrap">
+  <div class="tag">Cómo funciona</div>
+  <h2 class="serif">Lo que escuchas se convierte en un pago. Al instante.</h2>
+  <p class="sub">Sonora no reemplaza tu forma de escuchar música: la mide y la convierte en ingresos para el artista. Cuatro pasos, sin fricción para el oyente.</p>
+
+  <div class="flow">
+    <div class="step"><i>1</i><div><h3>Escuchas como siempre</h3><p>Conectas tu cuenta de streaming y sigues usándola igual. Sonora lee tu consumo real: qué artistas, cuántas veces, cuánto tiempo. No cambias de app ni de hábito.</p></div></div>
+    <div class="step"><i>2</i><div><h3>Tu consumo se vuelve un registro verificable</h3><p>Cada mes se calcula exactamente qué porcentaje de tu tiempo de escucha fue de cada artista. No es una estimación ni un promedio de mercado: es tu escucha.</p></div></div>
+    <div class="step"><i>3</i><div><h3>El pago se reparte solo</h3><p>Tu aporte mensual se distribuye entre los artistas que efectivamente escuchaste, en la proporción exacta en que los escuchaste. Sin pozo común y sin nadie decidiendo el reparto.</p></div></div>
+    <div class="step"><i>4</i><div><h3>El artista cobra cuando quiere</h3><p>El dinero llega a su cuenta en el momento, no al trimestre. Puede retirarlo, guardarlo o reinvertirlo. Nadie puede retenérselo ni congelarlo.</p></div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="tag">La diferencia</div>
+  <h2 class="serif">Mismo oyente, mismo mes, destino distinto.</h2>
+  <table>
+    <tr><th>&nbsp;</th><th>Plataformas actuales</th><th>Sonora</th></tr>
+    <tr><td>¿A quién le llega tu plata?</td><td>A un pozo repartido por popularidad global</td><td><b>A los artistas que tú escuchaste</b></td></tr>
+    <tr><td>¿Cuándo le llega?</td><td>Uno a tres meses después</td><td><b>En el momento</b></td></tr>
+    <tr><td>¿Cuántos intermediarios?</td><td>Plataforma, distribuidora, sello</td><td><b>Ninguno en el pago</b></td></tr>
+    <tr><td>¿Puede auditarse?</td><td>No: recibes un total y confías</td><td><b>Sí: cada pago es público y verificable</b></td></tr>
+    <tr><td>¿El artista conoce a su público?</td><td>Solo estadísticas agregadas</td><td><b>Sabe quién lo sostiene</b></td></tr>
+  </table>
+</div></section>
+
+<section><div class="wrap">
+  <div class="split">
+    <div>
+      <div class="tag">Para artistas</div>
+      <h2 class="serif" style="font-size:clamp(1.6rem,3.4vw,2.3rem)">Cien oyentes reales valen más que cien mil anónimos.</h2>
+      <p class="sub">Un músico independiente con mil seguidores fieles hoy gana casi nada. En Sonora, esos mil son un ingreso mensual concreto, predecible y que llega completo. No necesitas volverte masivo: necesitas que quienes ya te escuchan puedan pagarte.</p>
+    </div>
+    <div>
+      <div class="tag">Para oyentes</div>
+      <h2 class="serif" style="font-size:clamp(1.6rem,3.4vw,2.3rem)">Saber exactamente a quién estás financiando.</h2>
+      <p class="sub">Pagas lo mismo que hoy, pero tu plata deja de diluirse. Al final del mes ves el detalle: a qué artistas les llegó, cuánto, y qué parte de eso fue tuya. Apoyar deja de ser un gesto abstracto y pasa a ser una cifra.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="negocio"><div class="wrap">
+  <div class="tag">Modelo de negocio</div>
+  <h2 class="serif">Cómo se sostiene Sonora.</h2>
+  <p class="sub">Cuatro fuentes, todas alineadas con que al artista le vaya bien. Si el artista no cobra, Sonora no cobra.</p>
+
+  <div class="rev">
+    <div><h3>Comisión por pago</h3><p>Entre 1% y 3% de cada pago distribuido. El equivalente a lo que cobra una pasarela de pagos, aplicado a la música. Es la fuente principal y escala con el volumen real, no con la publicidad.</p></div>
+    <div><h3>Suscripción para oyentes</h3><p>Un plan pago con funciones que no afectan el reparto: apoyo reforzado a un artista, acceso anticipado, contenido y eventos exclusivos para quienes lo sostienen.</p></div>
+    <div><h3>Herramientas para artistas</h3><p>Analítica real de quién los escucha, campañas hacia su propio público, y liquidaciones automáticas. Plan profesional para artistas con equipo o sello propio.</p></div>
+    <div><h3>Ecosistema</h3><p>Integraciones con sellos, salas y festivales que quieran vender directo a un público que ya está identificado y dispuesto a pagar.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="quote">
+    <p class="serif"><em>La pregunta no es si la gente pagaría más por la música.<br>Es por qué lo que ya paga no le llega a quien la hizo.</em></p>
+  </div>
+</div></section>
+
+<section id="riesgos"><div class="wrap">
+  <div class="tag">Riesgos</div>
+  <h2 class="serif">Lo que todavía no está resuelto.</h2>
+  <p class="sub">Un proyecto que solo muestra su mejor cara no es un proyecto, es un folleto. Estos son los frentes abiertos y son los primeros que trabajamos.</p>
+  <div class="risks">
+    <div class="risk"><span>→</span><div><strong style="color:var(--text)">Depende de plataformas de terceros.</strong> La medición del consumo se apoya en APIs que no controlamos. Si cambian sus condiciones, hay que adaptarse rápido o cambiar de fuente.</div></div>
+    <div class="risk"><span>→</span><div><strong style="color:var(--text)">Sin artistas no hay producto.</strong> El valor aparece cuando hay catálogo adherido. Los primeros cientos de artistas son la parte difícil, y ninguna tecnología la resuelve sola.</div></div>
+    <div class="risk"><span>→</span><div><strong style="color:var(--text)">Terreno regulatorio en formación.</strong> Distribuir pagos a terceros toca normativa financiera que varía por país. Se aborda con asesoría legal desde el inicio, no después.</div></div>
+    <div class="risk"><span>→</span><div><strong style="color:var(--text)">La confianza se gana mostrando.</strong> Cualquiera puede prometer transparencia. Nosotros tenemos que demostrarla desde el primer pago, y públicamente.</div></div>
+  </div>
+</div></section>
+
+<section id="contacto"><div class="wrap">
+  <div class="split" style="align-items:center">
+    <div>
+      <div class="tag">Contacto</div>
+      <h2 class="serif">Si esto te suena, hablemos.</h2>
+      <p class="sub">Buscamos artistas dispuestos a probarlo primero y personas que quieran construirlo. Cuéntanos quién eres y qué te interesa.</p>
+    </div>
+
+    <form id="form" novalidate>
+      <div class="field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="correo">Correo</label>
+        <input id="correo" name="correo" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="rol">Te acercas como</label>
+        <select id="rol" name="rol">
+          <option>Artista</option>
+          <option>Oyente</option>
+          <option>Sello o manager</option>
+          <option>Quiero construirlo</option>
+          <option>Otra cosa</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+      </div>
+      <button class="btn btn-1" type="submit" style="width:100%;cursor:pointer;font-family:inherit">Enviar</button>
+      <p id="aviso" role="status" hidden></p>
+    </form>
+  </div>
+</div></section>
+
+<script>
+(function () {
+  var ENDPOINT = "demo";
+
+  var form = document.getElementById("form");
+  var aviso = document.getElementById("aviso");
+  var boton = form.querySelector("button[type=submit]");
+  var textoBoton = boton.textContent;
+
+  var ICONO = {
+    ok: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.4 2.4 2.4 4.6-5"/></svg>',
+    err: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.6v5"/><path d="M12 16.2h.01"/></svg>'
+  };
+
+  function mostrar(tipo, titulo, detalle) {
+    aviso.hidden = false;
+    aviso.className = "aviso" + (tipo ? " " + tipo : "");
+    aviso.innerHTML =
+      (ICONO[tipo] || "") +
+      "<span><b>" + titulo + "</b>" + (detalle || "") + "</span>";
+    aviso.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function validar() {
+    var campos = [form.nombre, form.correo];
+    var primero = null;
+    campos.forEach(function (campo) {
+      var vacio = !campo.value.trim();
+      var malCorreo = campo === form.correo && !vacio && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(campo.value.trim());
+      var invalido = vacio || malCorreo;
+      campo.setAttribute("aria-invalid", invalido ? "true" : "false");
+      if (invalido && !primero) primero = campo;
+    });
+    if (primero) {
+      mostrar("err", "Falta algo por completar.",
+        "Necesitamos tu nombre y un correo válido para poder responderte.");
+      primero.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function enviar(datos) {
+    if (!ENDPOINT) return Promise.reject(new Error("sin-canal"));
+    if (ENDPOINT === "demo") {
+      return new Promise(function (listo) { setTimeout(listo, 900); });
+    }
+    return fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos)
+    }).then(function (r) {
+      if (!r.ok) throw new Error("http-" + r.status);
+      return r;
+    });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!validar()) return;
+
+    var datos = {
+      nombre: form.nombre.value.trim(),
+      correo: form.correo.value.trim(),
+      rol: form.rol.value,
+      mensaje: form.mensaje.value.trim()
+    };
+
+    form.setAttribute("data-enviando", "");
+    boton.textContent = "Enviando\u2026";
+    aviso.hidden = true;
+
+    enviar(datos).then(function () {
+      form.reset();
+      form.nombre.setAttribute("aria-invalid", "false");
+      form.correo.setAttribute("aria-invalid", "false");
+      mostrar("ok", "Enviado exitosamente.", "");
+    }).catch(function (error) {
+      if (error && error.message === "sin-canal") {
+        mostrar("", "El canal de contacto todavía no está activo.",
+          "Tu mensaje no se envió y no guardamos nada de lo que escribiste. " +
+          "Estamos terminando de montarlo: vuelve en unos días y este formulario ya va a llegar a alguien.");
+      } else {
+        mostrar("err", "No pudimos enviar tu mensaje.",
+          "Algo falló en el camino. Intenta de nuevo en un momento.");
+      }
+    }).then(function () {
+      form.removeAttribute("data-enviando");
+      boton.textContent = textoBoton;
+    });
+  });
+})();
+</script>
+
+<footer><div class="wrap">
+  <div><span class="brand"><span class="dot"></span> Sonora</span></div>
+  <div>Proyecto en desarrollo · Las cifras citadas provienen de reportes públicos de artistas y son referenciales.</div>
+</div></footer>
+
+</body>
+</html>

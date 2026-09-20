@@ -13,6 +13,7 @@
   --bg:#08070b; --bg-2:#0f0d15; --surface:#141220; --line:#241f33;
   --text:#f4f1fa; --muted:#a49bb8; --dim:#6f6684;
   --accent:#c4f24a; --accent-2:#8b5cf6; --warm:#ff8a5b;
+  --ok:#5fd68a; --warn:#ff8a5b;
   --radius:18px; --max:1120px;
 }
 @media (prefers-color-scheme: light){
@@ -20,12 +21,14 @@
     --bg:#fbfaf7; --bg-2:#f3f1ec; --surface:#ffffff; --line:#e4e0d8;
     --text:#14121a; --muted:#5d5670; --dim:#89829a;
     --accent:#5f8f00; --accent-2:#6d3ff0; --warm:#d1502a;
+    --ok:#18794e; --warn:#b4451a;
   }
 }
 :root[data-theme="dark"]{
   --bg:#08070b; --bg-2:#0f0d15; --surface:#141220; --line:#241f33;
   --text:#f4f1fa; --muted:#a49bb8; --dim:#6f6684;
   --accent:#c4f24a; --accent-2:#8b5cf6; --warm:#ff8a5b;
+  --ok:#5fd68a; --warn:#ff8a5b;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -155,8 +158,19 @@ form{background:var(--surface); border:1px solid var(--line); border-radius:var(
 .field input:focus,.field select:focus,.field textarea:focus{
   outline:none; border-color:var(--accent)}
 .aviso{margin:18px 0 0; padding:14px 16px; border-radius:11px; font-size:14.5px;
+  display:flex; gap:11px; align-items:flex-start;
   color:var(--text); background:color-mix(in srgb,var(--accent) 12%, transparent);
   border:1px solid color-mix(in srgb,var(--accent) 38%, transparent)}
+.aviso b{display:block; margin-bottom:3px}
+.aviso .ico{flex:none; width:20px; height:20px; margin-top:1px}
+.aviso.ok{background:color-mix(in srgb,var(--ok) 13%, transparent);
+  border-color:color-mix(in srgb,var(--ok) 42%, transparent)}
+.aviso.ok .ico{color:var(--ok)}
+.aviso.err{background:color-mix(in srgb,var(--warn) 13%, transparent);
+  border-color:color-mix(in srgb,var(--warn) 42%, transparent)}
+.aviso.err .ico{color:var(--warn)}
+form[data-enviando] button[type=submit]{opacity:.6; pointer-events:none}
+.field input[aria-invalid=true],.field textarea[aria-invalid=true]{border-color:var(--warn)}
 
 footer{border-top:1px solid var(--line); padding:56px 0 72px; color:var(--dim); font-size:14px}
 footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
@@ -321,17 +335,91 @@ footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wr
 
 <script>
 (function () {
+  var ENDPOINT = "";
+
   var form = document.getElementById("form");
   var aviso = document.getElementById("aviso");
+  var boton = form.querySelector("button[type=submit]");
+  var textoBoton = boton.textContent;
+
+  var ICONO = {
+    ok: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.4 2.4 2.4 4.6-5"/></svg>',
+    err: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.6v5"/><path d="M12 16.2h.01"/></svg>'
+  };
+
+  function mostrar(tipo, titulo, detalle) {
+    aviso.hidden = false;
+    aviso.className = "aviso" + (tipo ? " " + tipo : "");
+    aviso.innerHTML =
+      (ICONO[tipo] || "") +
+      "<span><b>" + titulo + "</b>" + (detalle || "") + "</span>";
+    aviso.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function validar() {
+    var campos = [form.nombre, form.correo];
+    var primero = null;
+    campos.forEach(function (campo) {
+      var vacio = !campo.value.trim();
+      var malCorreo = campo === form.correo && !vacio && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(campo.value.trim());
+      var invalido = vacio || malCorreo;
+      campo.setAttribute("aria-invalid", invalido ? "true" : "false");
+      if (invalido && !primero) primero = campo;
+    });
+    if (primero) {
+      mostrar("err", "Falta algo por completar.",
+        "Necesitamos tu nombre y un correo válido para poder responderte.");
+      primero.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function enviar(datos) {
+    if (!ENDPOINT) return Promise.reject(new Error("sin-canal"));
+    return fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datos)
+    }).then(function (r) {
+      if (!r.ok) throw new Error("http-" + r.status);
+      return r;
+    });
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    aviso.hidden = false;
-    aviso.className = "aviso";
-    aviso.textContent =
-      "El canal de contacto todavía no está activo, así que tu mensaje no se envió " +
-      "y no guardamos nada de lo que escribiste. Estamos terminando de montarlo. " +
-      "Vuelve en unos días y este formulario ya va a llegar a alguien.";
-    aviso.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (!validar()) return;
+
+    var datos = {
+      nombre: form.nombre.value.trim(),
+      correo: form.correo.value.trim(),
+      rol: form.rol.value,
+      mensaje: form.mensaje.value.trim()
+    };
+
+    form.setAttribute("data-enviando", "");
+    boton.textContent = "Enviando\u2026";
+    aviso.hidden = true;
+
+    enviar(datos).then(function () {
+      form.reset();
+      form.nombre.setAttribute("aria-invalid", "false");
+      form.correo.setAttribute("aria-invalid", "false");
+      mostrar("ok", "Enviado exitosamente.", "");
+    }).catch(function (error) {
+      if (error && error.message === "sin-canal") {
+        mostrar("", "El canal de contacto todavía no está activo.",
+          "Tu mensaje no se envió y no guardamos nada de lo que escribiste. " +
+          "Estamos terminando de montarlo: vuelve en unos días y este formulario ya va a llegar a alguien.");
+      } else {
+        mostrar("err", "No pudimos enviar tu mensaje.",
+          "Algo falló en el camino. Intenta de nuevo en un momento.");
+      }
+    }).then(function () {
+      form.removeAttribute("data-enviando");
+      boton.textContent = textoBoton;
+    });
   });
 })();
 </script>

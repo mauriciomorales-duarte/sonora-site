@@ -174,12 +174,12 @@ form[data-enviando] button[type=submit]{opacity:.6; pointer-events:none}
 .field input[aria-invalid=true],.field textarea[aria-invalid=true]{border-color:var(--warn)}
 
 /* equipo */
-.equipo{display:grid; grid-template-columns:minmax(0,320px) 1fr; gap:clamp(24px,4vw,52px);
-  align-items:center; background:var(--surface); border:1px solid var(--line);
+.equipo{display:grid; grid-template-columns:minmax(0,270px) 1fr; gap:clamp(24px,4vw,46px);
+  align-items:stretch; background:var(--surface); border:1px solid var(--line);
   border-radius:var(--radius); padding:clamp(22px,3.5vw,38px)}
-.equipo .foto{margin:0; position:relative}
-.equipo .foto img{display:block; width:100%; aspect-ratio:4/5; object-fit:cover;
-  object-position:36% 28%; border-radius:14px; border:1px solid var(--line)}
+.equipo .foto{margin:0; position:relative; min-height:280px}
+.equipo .foto img{position:absolute; inset:0; display:block; width:100%; height:100%;
+  object-fit:cover; object-position:36% 26%; border-radius:14px; border:1px solid var(--line)}
 .equipo .quien{font-size:13px; letter-spacing:.09em; text-transform:uppercase;
   color:var(--accent); font-weight:600; margin:0 0 8px}
 .equipo h3{margin:0 0 4px; font-size:clamp(1.5rem,3vw,2rem); font-weight:500}
@@ -188,7 +188,8 @@ form[data-enviando] button[type=submit]{opacity:.6; pointer-events:none}
 .equipo p.bio:last-child{margin-bottom:0}
 @media (max-width:760px){
   .equipo{grid-template-columns:1fr}
-  .equipo .foto img{aspect-ratio:3/2; object-position:36% 26%}
+  .equipo .foto{min-height:0}
+  .equipo .foto img{position:static; aspect-ratio:3/2}
 }
 
 footer{border-top:1px solid var(--line); padding:56px 0 72px; color:var(--dim); font-size:14px}

@@ -173,6 +173,24 @@ form{background:var(--surface); border:1px solid var(--line); border-radius:var(
 form[data-enviando] button[type=submit]{opacity:.6; pointer-events:none}
 .field input[aria-invalid=true],.field textarea[aria-invalid=true]{border-color:var(--warn)}
 
+/* equipo */
+.equipo{display:grid; grid-template-columns:minmax(0,320px) 1fr; gap:clamp(24px,4vw,52px);
+  align-items:center; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:clamp(22px,3.5vw,38px)}
+.equipo .foto{margin:0; position:relative}
+.equipo .foto img{display:block; width:100%; aspect-ratio:4/5; object-fit:cover;
+  object-position:36% 28%; border-radius:14px; border:1px solid var(--line)}
+.equipo .quien{font-size:13px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--accent); font-weight:600; margin:0 0 8px}
+.equipo h3{margin:0 0 4px; font-size:clamp(1.5rem,3vw,2rem); font-weight:500}
+.equipo .rol{margin:0 0 18px; color:var(--muted); font-size:15px}
+.equipo p.bio{margin:0 0 14px; color:var(--muted); font-size:16.5px; line-height:1.62}
+.equipo p.bio:last-child{margin-bottom:0}
+@media (max-width:760px){
+  .equipo{grid-template-columns:1fr}
+  .equipo .foto img{aspect-ratio:3/2; object-position:36% 26%}
+}
+
 footer{border-top:1px solid var(--line); padding:56px 0 72px; color:var(--dim); font-size:14px}
 footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
 </style>
@@ -186,6 +204,7 @@ footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wr
     <a href="#como">Cómo funciona</a>
     <a href="#negocio">Modelo</a>
     <a href="#riesgos">Riesgos</a>
+    <a href="#equipo">Equipo</a>
   </div>
   <a class="btn btn-1" href="#contacto" style="padding:9px 18px;font-size:14px">Hablemos</a>
 </div></nav>
@@ -294,6 +313,24 @@ footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wr
     <div class="risk"><span>→</span><div><strong style="color:var(--text)">Sin artistas no hay producto.</strong> El valor aparece cuando hay catálogo adherido. Los primeros cientos de artistas son la parte difícil, y ninguna tecnología la resuelve sola.</div></div>
     <div class="risk"><span>→</span><div><strong style="color:var(--text)">Terreno regulatorio en formación.</strong> Distribuir pagos a terceros toca normativa financiera que varía por país. Se aborda con asesoría legal desde el inicio, no después.</div></div>
     <div class="risk"><span>→</span><div><strong style="color:var(--text)">La confianza se gana mostrando.</strong> Cualquiera puede prometer transparencia. Nosotros tenemos que demostrarla desde el primer pago, y públicamente.</div></div>
+  </div>
+</div></section>
+
+<section id="equipo"><div class="wrap">
+  <div class="tag">Equipo</div>
+  <h2 class="serif">Quién está detrás.</h2>
+  <p class="sub">Un proyecto que le pide confianza a un artista tiene que decir quién lo está construyendo.</p>
+  <div class="equipo">
+    <figure class="foto">
+      <img src="mauricio-morales.jpg" alt="Retrato de Mauricio Morales" width="1200" height="800">
+    </figure>
+    <div>
+      <p class="quien">Fundador</p>
+      <h3 class="serif">Mauricio Morales</h3>
+      <p class="rol">Producto y desarrollo de negocio</p>
+      <p class="bio">Sonora nace de una pregunta incómoda: por qué un artista que llena una sala sigue recibiendo centavos por lo que la gente escucha todos los días. La respuesta no es que falte dinero, es que el camino que recorre está diseñado para otros.</p>
+      <p class="bio">Hoy el trabajo es concreto: hablar con artistas, entender qué necesitan ver para confiar, y construir el flujo de pago que hoy no existe.</p>
+    </div>
   </div>
 </div></section>
 
